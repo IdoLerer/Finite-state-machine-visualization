@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Finite-State Machine Visualization</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Finite-State Machine Visualization</a>
+  </nav>
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 position-fixed d-none d-md-block bg-light h-100" id="settings">
+        <br />
+        <form id="alphabetForm">
+          <div class="form-group">
+            <label for="alphabet">Alphabet</label>
+            <input type="text" class="form-control" id="alphabet" required placeholder="Examples: 'a,b,c', '0,1'...">
+            <small id="alphabetHelp" class="form-text text-muted">Enter the alphabet letters seperated by ','</small>
+          </div>
+          <button type="submit" class="btn btn-primary">Set Alphabet</button>
+        </form>
+        <br />
+        <form id="stateForm">
+          <label for="stateName">States</label>
+          <div class="form-row">
+            <div class="form-group col-7">
+              <input type="text" class="form-control" id="stateName" placeholder="State name" required>
+            </div>
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Add state</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="accordion" id="accordionExample">
+          <% for(var i=0; i < states.length; i++){ %>
+            <div class="card">
+              <div class="card-header" id="heading<%= states[i] %>">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#<%= states[i] %>" aria-expanded="true" aria-controls="collapseOne">
+                    <%= states[i] %>
+                  </button>
+                  <button class="delete-btn btn btn-sm btn-outline-danger float-right mt-1" data-state="<%= states[i] %>">&#10005;</button>
+                  <button class="btn btn-sm btn-outline-primary float-right mr-2 mt-1">final</button>
+                  <button class="btn btn-sm btn-outline-warning float-right mr-2 mt-1">inital</button>
+                </h5>
+              </div>
+
+              <div id="<%= states[i] %>" class="collapse" aria-labelledby="heading<%= states[i] %>" data-parent="#accordionExample">
+                <div class="card-body">
+                  <% for(var j=0; j < alphabet.length; j++){ %>
+                    <div class="input-group mb-1">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01"><%= alphabet[j] %></label>
+                      </div>
+                      <select class="custom-select" id="inputGroupSelect01">
+                        <option selected>Choose...</option>
+                        <% for(var h=0; h < states.length; h++){ %>
+                          <option value=<%= h %>><%= states[h] %></option>
+                          <% } %>
+                        </select>
+                      </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+              </div>
+            </div>
+            <div class="col-md-9 offset-md-3">
+              <h3>canvas</h3>
+            </div>
+          </div>
+        </main>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="/settings.js" ></script>
+      </body>
+      </html>
