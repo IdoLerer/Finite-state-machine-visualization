@@ -2,12 +2,16 @@ class State {
   constructor(name,x,y) {
     this.name = name;
     this.center = {x:x,y:y}
-    this.radius = 60;
+    this.radius = 30;
     this.isInitial = false;
     this.isFinal = false;
     this.link = {to:[],from:[]};
     this.color = {r:0,g:0,b:0};
     this.fill = {r:255,g:255,b:255};
+    this.isDragged = false;
+  }
+  isColliding(x,y){
+    return Math.sqrt(Math.pow((x - this.center.x),2) + Math.pow((y - this.center.y),2)) < this.radius;
   }
   addLinkTo(link) {
     this.link.to.push(link);
@@ -24,9 +28,9 @@ class State {
     });
 
     if(has)
-      return has;
+    return has;
     else
-      return false;
+    return false;
   }
 
   hasLinkTo(state) {
@@ -37,20 +41,40 @@ class State {
     });
 
     if(has)
-      return has;
+    return has;
     else
-      return false;
+    return false;
   }
 
-  drawCircle(ctx, radius){
+  drawCircle(ctx){
+    if(this.isDragged) {
+      ctx.shadowColor = "grey";
+      ctx.shadowOffsetX = 4;
+      ctx.shadowOffsetY = 4;
+      ctx.shadowBlur = 12;
+    }
     ctx.beginPath();
-    ctx.arc(this.center.x,this.center.y,radius,0,2*Math.PI);
+    ctx.arc(this.center.x,this.center.y,this.radius,0,2*Math.PI);
     ctx.fillStyle = 'white';
     ctx.fill();
-    ctx.lineWidth = 2;
+    ctx.shadowColor = null;
+    ctx.shadowOffsetX = null;
+    ctx.shadowOffsetY = null;
+    ctx.shadowBlur = null;
+    // ctx.lineWidth = 2;
     ctx.stroke();
 
   }
+
+  drawFinal(ctx){
+    ctx.beginPath();
+    ctx.arc(this.center.x,this.center.y,this.radius - 5,0,2*Math.PI);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
   writeText(ctx){
     ctx.textAlign = "center";
     ctx.textBaseline="middle";
@@ -58,73 +82,32 @@ class State {
     ctx.fillText(this.name,this.center.x,this.center.y);
   }
 
-  draw(ctx) {
-    // push();
-    // stroke(this.color.r,this.color.g,this.color.b);
-    // strokeWeight(1.5);
-    // fill(this.fill.r,this.fill.g,this.fill.b);
-    // ellipseMode(CENTER);
-    // ellipse(this.center.x,this.center.y,this.diameter);
-    // pop();
-    // if(this.isFinal) {
-    //   this.drawFinal();
-    // }
-    // if(this.isStart) {
-    //   this.drawStart();
-    // }
-    // this.drawText();
+  closestPointOnEdge(x, y) {
+    var dx = x - this.center.x;
+    var dy = y - this.center.y;
+    var scale = Math.sqrt(dx * dx + dy * dy);
+    return {
+      x: this.center.x + dx * 30 / scale,
+      y: this.center.y + dy * 30 / scale,
+    };
+  }
 
-    this.drawCircle(ctx, 30);
+  draw(ctx) {
+    this.drawCircle(ctx);
+    if(this.isFinal) this.drawFinal(ctx);
     this.writeText(ctx);
   }
 
-  // drawStart() {
-  //   push();
-  //   stroke(this.color.r,this.color.g,this.color.b);
-  //   fill(100);
-  //
-  //   let p = {x : this.center.x - this.diameter/2,y: this.center.y};
-  //   triangle(p.x,p.y,p.x-8,p.y-8,p.x-8,p.y+8);
-  //   stroke(100);
-  //   strokeWeight(1.5);
-  //   line(p.x-8,p.y,p.x-50,p.y);
-  //   pop();
-  // }
-  //
-  // drawFinal() {
-  //   push();
-  //   stroke(this.color.r,this.color.g,this.color.b);
-  //   strokeWeight(1.5);
-  //   fill(this.fill.r,this.fill.g,this.fill.b);
-  //   ellipseMode(CENTER);
-  //   ellipse(this.center.x,this.center.y,this.diameter-10);
-  //   pop();
-  // }
-  // drawText() {
-  //   push();
-  //   stroke(this.color.r,this.color.g,this.color.b);
-  //   text(this.stateName,this.center.x - this.stateName.length,this.center.y +  this.stateName.length);
-  //   pop();
-  // }
-  // handleDrag(mouseX,mouseY) {
-  //   if(dist(mouseX,mouseY,this.center.x,this.center.y) < this.diameter/2) {
-  //     this.dragedPoint = {x:this.center.x - mouseX,y: this.center.y - mouseY};
-  //     this.center.x = mouseX + this.dragedPoint.x;
-  //     this.center.y = mouseY+ this.dragedPoint.y;
-  //     return true;
-  //   } else
-  //   return false;
-  // }
   setPos(x,y) {
     this.center.x = x + this.dragedPoint.x;
     this.center.y = y + this.dragedPoint.y;
   }
 
-  setFinal() {
-    this.isFinal = true;
+  setFinal(isFinal) {
+    this.isFinal = isFinal;
   }
-  setStart() {
-    this.isStart = true;
+  setInitial(isInitial) {
+    this.isInitial = isInitial;
   }
 
 }

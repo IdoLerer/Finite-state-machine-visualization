@@ -9,16 +9,26 @@ class Dfa {
     var i = 1;
     var newState;
     states.forEach((state) => {
-      newState = new State(state, Math.random() * canvasWidth, Math.random() * canvasHeight);
+      newState = new State(state,70 + Math.random() * (canvasWidth-70), 70 +  Math.random() * (canvasHeight - 70));
+      if (finalStates.includes(state)) newState.setFinal(true);
+      if (initialState == state) newState.setInitial(true);
       this.states.push(newState);
       i++;
     });
     var newLine;
+    var toState;
+    var isAlreadyConnected;
     this.states.forEach((state) =>{
       alphabet.forEach((letter) =>{
-        newLine = new Line(state, this.states.find((e) =>{
-           return e.name === func[state.name][letter]}), letter);
-        this.lines.push(newLine);
+        toState = this.states.find((e) => {return e.name === func[state.name][letter]});
+        isAlreadyConnected = state.link.to.find((s) => {return s.name === toState.name});
+        if (isAlreadyConnected == null){
+          newLine = new Line(state, toState, [letter]);
+          this.lines.push(newLine);
+          state.link.to.push({name: toState.name, line: newLine});
+        } else {
+          isAlreadyConnected.line.letters.push(letter);
+        }
       });
     });
   }
@@ -32,6 +42,7 @@ class Dfa {
   }
 
   draw(ctx){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.lines.forEach((line)=>line.draw(ctx));
     this.states.forEach((state)=>state.draw(ctx));
   }

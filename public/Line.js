@@ -10,18 +10,7 @@ class Line {
     var fromY = this.from.center.y;
     var toX = this.to.center.x;
     var toY = this.to.center.y;
-
-    function   drawSelfConnection(){
-      // var circleX = this.node.x + 1.5 * nodeRadius * Math.cos(this.anchorAngle);
-      // var circleY = this.node.y + 1.5 * nodeRadius * Math.sin(this.anchorAngle);
-      // var circleRadius = 0.75 * nodeRadius;
-      // var startAngle = this.anchorAngle - Math.PI * 0.8;
-      // var endAngle = this.anchorAngle + Math.PI * 0.8;
-      // var startX = circleX + circleRadius * Math.cos(startAngle);
-      // var startY = circleY + circleRadius * Math.sin(startAngle);
-      // var endX = circleX + circleRadius * Math.cos(endAngle);
-      // var endY = circleY + circleRadius * Math.sin(endAngle);
-    }
+    var letters = this.letters;
 
     function drawArrow(x, y, angle) {
       var dx = Math.cos(angle);
@@ -33,6 +22,40 @@ class Line {
       ctx.fill();
     }
 
+    function drawText(x,y){
+      ctx.textAlign = "center";
+      ctx.textBaseline="middle";
+      ctx.fillStyle = 'black';
+      ctx.font = "15px Arial"
+      var s = "";
+      for (var i = 0; i < letters.length; i++) {
+        s += (i == 0 ? "" : ",") + letters[i];
+      }
+      ctx.fillText(s,x,y);
+    };
+
+    function   drawSelfConnection(){
+      var circleX = fromX;
+      var circleY = fromY - 38;
+      var circleRadius = 22.5;
+      var startAngle = Math.PI * 0.8;
+      var endAngle = Math.PI * 0.2;
+      var startX = circleX + circleRadius * Math.cos(startAngle);
+      var startY = circleY + circleRadius * Math.sin(startAngle);
+      var endX = circleX + circleRadius * Math.cos(endAngle);
+      var endY = circleY + circleRadius * Math.sin(endAngle);
+      ctx.beginPath();
+      ctx.arc(circleX, circleY, circleRadius, startAngle, endAngle, false);
+      ctx.stroke();
+
+      drawText(circleX, circleY - circleRadius - 10);
+      //      var textX = stuff.circleX + stuff.circleRadius * Math.cos(this.anchorAngle);
+      // var textY = stuff.circleY + stuff.circleRadius * Math.sin(this.anchorAngle);
+      // drawText(c, this.text, textX, textY, this.anchorAngle, selectedObject == this);
+
+      drawArrow(endX, endY, endAngle + Math.PI * 0.4);
+    }
+
     if (this.to === this.from) drawSelfConnection();
     else {
       ctx.beginPath();
@@ -42,6 +65,12 @@ class Line {
       var ctp = {x: (toX + fromX)/2, y: (toY+fromY)/2+ctpDirection*ctpHeight}
       ctx.quadraticCurveTo(ctp.x,ctp.y,toX,toY);
       ctx.stroke();
+
+      var closestPointOnEdge = this.to.closestPointOnEdge(ctp.x,ctp.y);
+      drawArrow(closestPointOnEdge.x, closestPointOnEdge.y, Math.atan2(toY - fromY, toX - fromX));
+
+      var offset = Math.pow(Math.abs(toX - fromX), 1/2) < 45 ? Math.pow(Math.abs(toX - fromX), 1/2) : 45;
+      drawText(ctp.x, ctp.y - ctpDirection*(offset));
     }
   }
 }
