@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const settingsController = require('./controllers/settingsController');
+
 var app = express();
 const port = 3000;
 

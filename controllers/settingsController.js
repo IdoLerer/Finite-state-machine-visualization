@@ -1,8 +1,9 @@
-var data = {states: ['S1', 'S2'], alphabet: ['0','1']};
 const bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({extended: false});
 
 module.exports = function (app) {
+
+  var data = {states: ['S1', 'S2'], alphabet: ['0','1']};
 
   app.get('/', (req, res) => {
     res.render('index', data);
@@ -26,4 +27,6 @@ module.exports = function (app) {
     });
     res.json(data);
   });
+
+  return data;
 };
