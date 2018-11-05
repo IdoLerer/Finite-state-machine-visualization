@@ -49,9 +49,6 @@ class Line {
       ctx.stroke();
 
       drawText(circleX, circleY - circleRadius - 10);
-      //      var textX = stuff.circleX + stuff.circleRadius * Math.cos(this.anchorAngle);
-      // var textY = stuff.circleY + stuff.circleRadius * Math.sin(this.anchorAngle);
-      // drawText(c, this.text, textX, textY, this.anchorAngle, selectedObject == this);
 
       drawArrow(endX, endY, endAngle + Math.PI * 0.4);
     }

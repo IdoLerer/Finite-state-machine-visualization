@@ -2,12 +2,12 @@ $(document).ready(function(){
 var canvas = document.querySelector('canvas');
 canvas.style.width ='100%';
 canvas.style.height='100%';
-
+canvas.style.border = "1px solid black";
 canvas.width  = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 
 var ctx = canvas.getContext('2d');
-var dfa = new Dfa(["0","1"], ['S1', 'S2'], 'S1', {S1: {0: 'S2', 1:'S2'}, S2: {0: 'S1', 1:'S2'}}, ['S1'], canvas.height, canvas.width);
+var dfa = new Dfa(data.alphabet, data.states, data.initialState, data.func, data.finalStates, canvas.height, canvas.width);
 
 var offset = {};
 var draggedState;

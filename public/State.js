@@ -72,7 +72,14 @@ class State {
     ctx.fillStyle = 'white';
     ctx.fill();
     ctx.lineWidth = 1;
+    if(!this.isInitial) ctx.stroke();
+  }
+
+  drawInitial(ctx){
+    ctx.moveTo(this.center.x-this.radius*2.5,this.center.y);
+    ctx.lineTo(this.center.x-this.radius,this.center.y);
     ctx.stroke();
+    this.drawArrow(this.center.x-this.radius,this.center.y,0,ctx);
   }
 
   writeText(ctx){
@@ -80,6 +87,17 @@ class State {
     ctx.textBaseline="middle";
     ctx.fillStyle = 'black';
     ctx.fillText(this.name,this.center.x,this.center.y);
+  }
+
+  drawArrow(x, y, angle, ctx) {
+    var dx = Math.cos(angle);
+    var dy = Math.sin(angle);
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - 8 * dx + 5 * dy, y - 8 * dy - 5 * dx);
+    ctx.lineTo(x - 8 * dx - 5 * dy, y - 8 * dy + 5 * dx);
+    ctx.fill();
   }
 
   closestPointOnEdge(x, y) {
@@ -95,6 +113,7 @@ class State {
   draw(ctx) {
     this.drawCircle(ctx);
     if(this.isFinal) this.drawFinal(ctx);
+    if(this.isInitial) this.drawInitial(ctx);
     this.writeText(ctx);
   }
 

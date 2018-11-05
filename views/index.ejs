@@ -5,11 +5,15 @@
   <title>Finite-State Machine Visualization</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="/style.css" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+  var data =<%-JSON.stringify(data)%>
+</script>
 </head>
 <body>
   <nav class="navbar navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="#">Finite-State Machine Visualization</a>
-</nav>
+    <a class="navbar-brand" href="#">Finite-State Machine Visualization</a>
+  </nav>
   <main role="main" class="container-fluid">
     <div class="row">
       <div class="col-md-3 position-fixed d-none d-md-block bg-light h-100" id="settings">
@@ -35,31 +39,37 @@
           </div>
         </form>
 
-        <div class="accordion" id="accordionExample">
-          <% for(var i=0; i < states.length; i++){ %>
-            <div class="card">
-              <div class="card-header" id="heading<%= states[i] %>">
+        <div class="accordion" id="statesAccordion">
+          <% for(var i=0; i < data.states.length; i++){ %>
+            <div class="card stateCard">
+              <div class="card-header" id="heading<%= data.states[i] %>">
                 <h5 class="mb-0">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#<%= states[i] %>" aria-expanded="true" aria-controls="collapseOne">
-                    <%= states[i] %>
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#<%= data.states[i] %>" aria-expanded="true" aria-controls="collapseOne">
+                    <%= data.states[i] %>
                   </button>
-                  <button class="delete-btn btn btn-sm btn-outline-danger float-right mt-1" data-state="<%= states[i] %>">&#10005;</button>
-                  <button class="btn btn-sm btn-outline-primary float-right mr-2 mt-1">final</button>
-                  <button class="btn btn-sm btn-outline-warning float-right mr-2 mt-1">inital</button>
+                  <button class="delete-btn btn btn-sm btn-outline-danger float-right mt-1" data-state="<%= data.states[i] %>">&#10005;</button>
+                  <div class="btn-group-toggle d-inline-block float-right" data-toggle="buttons">
+                    <label class="btn btn-sm btn-outline-primary float-right mr-2 mt-1">
+                      <input type="checkbox" autocomplete="off"> final
+                    </label>
+                    <label class="btn btn-sm btn-outline-warning float-right mr-2 mt-1">
+                      <input type="checkbox" autocomplete="off"> inital
+                    </label>
+                  </div>
                 </h5>
               </div>
 
-              <div id="<%= states[i] %>" class="collapse" aria-labelledby="heading<%= states[i] %>" data-parent="#accordionExample">
+              <div id="<%= data.states[i] %>" class="collapse" aria-labelledby="heading<%= data.states[i] %>" data-parent="#statesAccordion">
                 <div class="card-body">
-                  <% for(var j=0; j < alphabet.length; j++){ %>
+                  <% for(var j=0; j < data.alphabet.length; j++){ %>
                     <div class="input-group mb-1">
                       <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01"><%= alphabet[j] %></label>
+                        <label class="input-group-text" for="<%= data.alphabet[j] %>"><%= data.alphabet[j] %></label>
                       </div>
-                      <select class="custom-select" id="inputGroupSelect01">
-                        <option selected>Choose...</option>
-                        <% for(var h=0; h < states.length; h++){ %>
-                          <option value=<%= h %>><%= states[h] %></option>
+                      <select class="custom-select" data-letter="<%= data.alphabet[j] %>" data-fromState="<%= data.states[i] %>">
+                        <!-- <option selected>Choose...</option> -->
+                        <% for(var h=0; h < data.states.length; h++){ %>
+                          <option <%= data.func[data.states[i]][data.alphabet[j]] == data.states[h] ? 'selected' : '' %> value=<%= data.states[h] %>><%= data.states[h] %></option>
                           <% } %>
                         </select>
                       </div>
@@ -68,6 +78,8 @@
                   </div>
                 </div>
                 <% } %>
+                <br>
+                <button type="submit" class="btn btn-primary" id="update-function-btn" onclick="updateFunc()">Update Function</button>
               </div>
             </div>
             <div class="col-md-9 offset-md-3" id="canvasDiv">
