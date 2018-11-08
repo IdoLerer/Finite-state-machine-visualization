@@ -5,7 +5,7 @@ module.exports = function (app) {
 
   var data = {alphabet: ['0','1'],
               states: ['S1', 'S2'],
-              initialState: 'S1',
+              initialStates: ['S1'],
               func: {S1: {0: 'S2', 1:'S2'}, S2: {0: 'S1', 1:'S2'}},
               finalStates: ['S1']};
 
@@ -15,7 +15,7 @@ module.exports = function (app) {
 
   app.post('/alphabet', urlencodedParser, (req, res) => {
     data.alphabet = req.body.newAlphabet.split(",");
-    updateFunc();
+    resetFunc();
     res.json(data);
   });
 
@@ -31,6 +31,8 @@ module.exports = function (app) {
 
   app.post('/updateStates', urlencodedParser, (req, res) => {
     data.func = JSON.parse(req.body.func);
+    data.initialStates = JSON.parse(req.body.initialStates);
+    data.finalStates = JSON.parse(req.body.finalStates);
     res.json(data);
   });
 
@@ -38,11 +40,11 @@ module.exports = function (app) {
     data.states = data.states.filter(function(state){
       return state !== req.params.item;
     });
-    updateFunc();
+    resetFunc();
     res.json(data);
   });
 
-  function updateFunc(){
+  function resetFunc(){
     data.func = {};
     for (var i = 0; i < data.states.length; i++) {
       var state = data.states[i];

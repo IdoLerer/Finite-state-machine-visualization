@@ -49,18 +49,28 @@ $(document).ready(function(){
   function updateFunc(){
     var func = {};
     var finalStates = [];
-    var states = $('.stateCard').find('select').each((index, s) =>{
-      // if
+    var initialStates = [];
+    //update function
+    $('.stateCard').find('select').each((index, s) =>{
       var selected = {fromState: s.getAttribute("data-fromState"),
       letter: s.getAttribute("data-letter"),
       toState: s.options[s.selectedIndex].value};
       if (func[selected.fromState] == null) func[selected.fromState] = {};
       func[selected.fromState][selected.letter] = selected.toState;
     });
+
+    //update final states
+    $('.btn-final').each((index,s) => {
+      if (s.classList.contains("active")) finalStates.push(s.getAttribute("data-state"));
+    });
+    //update initial states
+    $('.btn-inital').each((index,s) => {
+      if (s.classList.contains("active")) initialStates.push(s.getAttribute("data-state"));
+    });
     $.ajax({
       type: 'POST',
       url: '/updateStates',
-      data: {func: JSON.stringify(func)},
+      data: {func: JSON.stringify(func), initialStates: JSON.stringify(initialStates), finalStates: JSON.stringify(finalStates)},
       success: function(data){
         location.reload();
       }

@@ -48,11 +48,11 @@
                     <%= data.states[i] %>
                   </button>
                   <button class="delete-btn btn btn-sm btn-outline-danger float-right mt-1" data-state="<%= data.states[i] %>">&#10005;</button>
-                  <div class="btn-group-toggle d-inline-block float-right" data-toggle="buttons">
-                    <label class="btn btn-sm btn-outline-primary float-right mr-2 mt-1">
+                  <div class="btn-group-toggle d-inline-block float-right" data-toggle="buttons" >
+                    <label class="btn btn-sm btn-outline-primary float-right mr-2 mt-1 btn-final <%= data.finalStates.includes(data.states[i]) ? 'active' : '' %>" data-state="<%= data.states[i] %>">
                       <input type="checkbox" autocomplete="off"> final
                     </label>
-                    <label class="btn btn-sm btn-outline-warning float-right mr-2 mt-1">
+                    <label class="btn btn-sm btn-outline-warning float-right mr-2 mt-1 btn-inital <%= data.initialStates.includes(data.states[i]) ? 'active' : '' %>" data-state="<%= data.states[i] %>">
                       <input type="checkbox" autocomplete="off"> inital
                     </label>
                   </div>
@@ -79,7 +79,7 @@
                 </div>
                 <% } %>
                 <br>
-                <button type="submit" class="btn btn-primary" id="update-function-btn" onclick="updateFunc()">Update Function</button>
+                <button type="submit" class="btn btn-primary" id="update-function-btn">Update Function</button>
               </div>
             </div>
             <div class="col-md-9 offset-md-3" id="canvasDiv">

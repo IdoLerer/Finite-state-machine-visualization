@@ -7,7 +7,7 @@ canvas.width  = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 
 var ctx = canvas.getContext('2d');
-var dfa = new Dfa(data.alphabet, data.states, data.initialState, data.func, data.finalStates, canvas.height, canvas.width);
+var dfa = new Dfa(data.alphabet, data.states, data.initialStates, data.func, data.finalStates, canvas.height, canvas.width);
 
 var offset = {};
 var draggedState;

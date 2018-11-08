@@ -1,6 +1,6 @@
 class Dfa {
-  constructor(alphabet, states, initialState, func, finalStates, canvasHeight, canvasWidth) {
-    this.currentState = initialState;
+  constructor(alphabet, states, initialStates, func, finalStates, canvasHeight, canvasWidth) {
+    this.currentStates = initialStates;
     this.func = func;
     this.finalStates = finalStates;
     this.states = [];
@@ -11,7 +11,7 @@ class Dfa {
     states.forEach((state) => {
       newState = new State(state,70 + Math.random() * (canvasWidth-70), 70 +  Math.random() * (canvasHeight - 70));
       if (finalStates.includes(state)) newState.setFinal(true);
-      if (initialState == state) newState.setInitial(true);
+      if (initialStates.includes(state)) newState.setInitial(true);
       this.states.push(newState);
       i++;
     });
